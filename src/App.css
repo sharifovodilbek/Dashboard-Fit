@@ -1,20 +1,36 @@
 @import "tailwindcss";
 
+
 body{
-    overflow:hidden;
-    background-color:rgba(55, 81, 255, 4%);
+    overflow: hidden;
+    background: rgba(55, 81, 255, 4%);
 }
 
 .active{
-    color:#DDE2FF;
-    background-color: rgba(159,162,180,8%);
+    color: #DDE2FF;
+    background-color: rgba(159, 162, 180, 8%);
 }
-
 .active::before{
-    content:"";
+    content: "";
     width: 3px;
     height: 100%;
     position: absolute;
     background-color: #DDE2FF;
     left: 0;
+}
+
+.loading-img{
+    animation-name: loading;
+    animation-duration: 0.8s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+}
+
+@keyframes loading{
+    0%{
+        transform: scale(1.2);
+    }
+    100%{
+        transform: scale(2.2);
+    }
 }

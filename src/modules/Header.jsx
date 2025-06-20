@@ -1,71 +1,51 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useContext, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import { navList } from '../hooks/paths';
-import image1 from '../assets/images/search.png'
-import image2 from '../assets/images/image.png'
-import image3 from '../assets/images/prof2.png'
+import { ArrowBack, LupaIcon, NotificationIcon } from '../assets/icons';
+import AvatarIcon from "../assets/images/avatar.svg"
+import { Context } from '../context/Context';
 
 const Header = () => {
-  const { pathname } = useLocation();
-  const [openInput, setOpenInput] = useState(false);
-
-  function handleClose() {
+  const {ticketsList, setSearchRes} = useContext(Context)
+  const { pathname } = useLocation()
+  const navigate = useNavigate()
+  const [showInput, setShowInput] = useState(false)
+  function handleBlur(e){
     setTimeout(() => {
-      setOpenInput(false);
-    }, 150);
+      setShowInput(false)
+      e.target.value = null
+    }, 2000)
   }
-
-  const pageTitle = navList.find(item => item.path === pathname)?.title || 'Dashboard';
-
+  function handleSearch(e){
+    if(location.pathname == "/tickets"){
+     let filterTicket = ticketsList.filter(item => item.username.toLowerCase().includes(e.target.value.toLowerCase()))
+     if(!e.target.value){
+       setSearchRes(ticketsList)
+      }
+      else{
+       setSearchRes(filterTicket)
+     }
+    }
+  }
   return (
-    <div className='flex justify-between items-center py-3 px-6 bg-white shadow-sm'>
-      { }
-      <strong className='text-2xl font-semibold text-[#252733]'>
-        {pageTitle}
-      </strong>
-
-      <div className='flex items-center gap-4'>
-
-        { }
-        <div className='relative'>
-          <img
-            src={image1}
-            alt='search'
-            className='w-5 h-5 cursor-pointer'
-            onClick={() => setOpenInput(true)}
-          />
-          <input
-            type='text'
-            placeholder='Typing...'
-            className={`absolute right-6 top-[-2px] border border-gray-300 rounded px-2 py-1 text-sm outline-none transition-all duration-300 bg-white ${openInput ? 'w-40 opacity-100' : 'w-0 opacity-0'
-              }`}
-            onBlur={handleClose}
-            autoFocus={openInput}
-          />
+    <div className='flex items-center justify-between mb-[58px]'>
+      {navList.find(item => item.path == pathname)?.title ? <strong className='font-bold text-[24px] text-[#252733]'>{navList.find(item => item.path == pathname)?.title}</strong> : <button onClick={() => navigate(-1)}> <ArrowBack/> </button>}
+      <div className='flex items-center gap-[32px]'>
+        <div className='flex items-center gap-[24px]'>
+          <div className='flex items-center'>
+            <button className={`${showInput ? "hidden" : ""} cursor-pointer`} onClick={() => setShowInput(true)}> <LupaIcon /> </button>
+            <input onChange={handleSearch} onBlur={handleBlur} className={`border-[1px] duration-400 rounded-2xl outline-none  ${showInput ? "focus:shadow-sm shadow-blue-500 py-1 pl-2 border-slate-200 w-[180px]" : "w-0 border-transparent"}`} placeholder='Searching...' />
+          </div>
+          <button> <NotificationIcon /> </button>
         </div>
-
-        { }
-        <img
-          src={image2}
-          alt='notifications'
-          className='w-5 h-5'
-        />
-
-        { }
-        <div className='h-6 w-px bg-gray-300'></div>
-
-        { }
-        <div className='flex items-center gap-2'>
-          <span className='text-sm text-[#252733] font-medium'>Jones Ferdinand</span>
-          <img
-            src={image3}
-            alt='user'
-            className='w-8 h-8 rounded-full'
-          />
+        <span className='w-[1px] h-[32px] inline-block bg-[#DFE0EB]'></span>
+        <div className='flex items-center gap-[24px]'>
+          <p className='font-semibold text-[14px]'>Jones Ferdinand</p>
+          <img src={AvatarIcon} alt='Avatar' width={44} height={44} />
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
